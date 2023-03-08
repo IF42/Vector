@@ -1,4 +1,6 @@
-# Prerequisites
+*.swp
+
+#Prerequisites
 *.d
 
 # Object files

@@ -1,0 +1,2 @@
+.cache/test.o: test/test.c
+.cache/vector.o: src/vector.c src/vector.h
