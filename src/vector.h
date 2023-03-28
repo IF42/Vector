@@ -68,7 +68,7 @@ vector_new(
 ** @brief Simplified Vector constructor, where is not needed to write 
 ** explicitly type size, with operator sizeof.
 */
-#define vector(T, length, delete)           \
+#define vector(T, length, delete)                           \
     vector_new(sizeof(T), length, VECTOR_DELETE(delete));
 
 
@@ -115,6 +115,15 @@ Vector(void) *
 vector_resize(
     Vector_t * self
     , size_t length);
+
+
+/**
+** @brief
+*/
+Vector(void) *
+vector_concat(
+    Vector_t * a
+    , Vector_t * b);
 
 
 /**

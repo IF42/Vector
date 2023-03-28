@@ -13,7 +13,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-
+ 
 
 Vector(void) *
 vector_new(
@@ -25,13 +25,9 @@ vector_new(
         malloc(sizeof(Vector_t) + (type_size * length));
 
     if(self != NULL)
-    {
-        self->type_size = type_size;
-        self->length    = length;
-        self->delete    = delete;
-    }
+       *self = (Vector_t){type_size, length, delete};
 
-    return (self + 1);
+    return self + 1;
 }
 
 
@@ -49,14 +45,11 @@ vector_new_init(
 
     if(self != NULL)
     {
-        self->type_size = type_size;
-        self->length    = length;
-        self->delete    = delete;
-
+        *self = (Vector_t){type_size, length, delete};
         memcpy(self + 1, array, byte_length);
     }
 
-    return (self + 1);
+    return self + 1;
 }
 
 
@@ -74,7 +67,7 @@ vector_clone(Vector_t * self)
     if(clone != NULL)
         memcpy(clone, self, memsize);
 
-    return (self + 1);
+    return self + 1;
 }
 
 
@@ -95,9 +88,29 @@ vector_resize(
         return (resize + 1);
     }
     else
-        return (self + 1);
+        return self + 1;
 }
 
+
+Vector(void) *
+vector_concat(
+    Vector_t * a
+    , Vector_t * b)
+{
+    if(a->type_size != b->type_size)
+        return NULL;
+
+    Vector_t * self = 
+        vector_new(
+            a->type_size
+            , a->length + b->length
+            , a->delete);
+
+    memcpy(self+1, a+1, a->type_size*a->length);
+    memcpy((char*)(self+1) + (a->type_size*a->length), b+1, b->type_size*b->length);
+
+    return self+1;
+}
 
 void
 vector_delete(Vector_t * self)
