@@ -1,6 +1,10 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -pedantic -std=c2x -O3 -fpic
+CFLAGS=-Wall -Wextra -pedantic -std=c2x -O3 -fPIC
 LIBS=
+
+
+INCLUDE_PATH=/usr/include/
+LIB_PATH=/usr/lib64/
 
 TARGET=libvector.so
 CACHE=.cache
@@ -11,11 +15,10 @@ TEST += test.o
 
 
 OBJ=$(addprefix $(CACHE)/,$(MODULES))
-
 T_OBJ=$(addprefix $(CACHE)/,$(TEST))
 
 all: env $(OBJ)
-	$(CC) -shared $(OBJ) $(LIBS) -o $(OUTPUT)/$(TARGET)
+	$(CC) -shared $(CFLAGS) $(OBJ) $(LIBS) -o $(OUTPUT)/$(TARGET)
 
 
 %.o:
@@ -40,6 +43,11 @@ dep:
 env:
 	mkdir -pv $(CACHE)
 	mkdir -pv $(OUTPUT)
+
+
+install:
+	cp -v $(OUTPUT)/$(TARGET) $(LIB_PATH)/$(TARGET)
+	cp -v src/vector.h $(INCLUDE_PATH)/vector.h
 
 
 clean: 
