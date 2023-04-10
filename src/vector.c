@@ -21,18 +21,18 @@ vector_new(
     , size_t length
     , VectorDelete delete)
 {
-    Vector_t * self = 
-        malloc(sizeof(Vector_t) + (type_size * length));
+    Vector * self = 
+        malloc(sizeof(Vector) + (type_size * length));
 
     if(self != NULL)
-       *self = (Vector_t){type_size, length, delete};
+       *self = (Vector){.type_size = type_size, .length=length, .delete=delete};
 
     return self + 1;
 }
 
 
 Vector(void) *
-vector_new_init(
+vector_new_from_array(
     size_t type_size
     , size_t length
     , void * array
@@ -40,12 +40,12 @@ vector_new_init(
 {
     size_t byte_length = type_size * length; 
 
-    Vector_t * self = 
-        malloc(sizeof(Vector_t) + byte_length);
+    Vector * self = 
+        malloc(sizeof(Vector) + byte_length);
 
     if(self != NULL)
     {
-        *self = (Vector_t){type_size, length, delete};
+        *self = (Vector){.type_size=type_size, .length=length, .delete=delete};
         memcpy(self + 1, array, byte_length);
     }
 
@@ -54,15 +54,15 @@ vector_new_init(
 
 
 Vector(void) *
-vector_clone(Vector_t * self)
+vector_clone(Vector * self)
 {
     if(self == NULL) 
         return NULL;
 
     size_t memsize = 
-        sizeof(Vector_t) + (self->type_size * self->length);
+        sizeof(Vector) + (self->type_size * self->length);
 
-    Vector_t * clone = malloc(memsize);
+    Vector * clone = malloc(memsize);
 
     if(clone != NULL)
         memcpy(clone, self, memsize);
@@ -73,14 +73,14 @@ vector_clone(Vector_t * self)
 
 Vector(void) *
 vector_resize(
-    Vector_t * self
+    Vector * self
     , size_t length)
 {
     if(self == NULL)
         return NULL;
 
-    Vector_t * resize = 
-        realloc(self, sizeof(Vector_t) + (self->type_size * length));
+    Vector * resize = 
+        realloc(self, sizeof(Vector) + (self->type_size * length));
 
     if(resize != NULL)
     {
@@ -94,13 +94,13 @@ vector_resize(
 
 Vector(void) *
 vector_concat(
-    Vector_t * a
-    , Vector_t * b)
+    Vector * a
+    , Vector * b)
 {
     if(a->type_size != b->type_size)
         return NULL;
 
-    Vector_t * self = 
+    Vector * self = 
         vector_new(
             a->type_size
             , a->length + b->length
@@ -113,7 +113,7 @@ vector_concat(
 }
 
 void
-vector_delete(Vector_t * self)
+vector_delete(Vector * self)
 {
     if(self != NULL)
         self->delete(self);

@@ -12,13 +12,13 @@
 #include <stddef.h>
 
 
-typedef struct Vector_t Vector_t;
+typedef struct Vector Vector;
 
 
 /**
 ** @brief Data type for Vector destructor
 */
-typedef void(*VectorDelete)(Vector_t *);
+typedef void(*VectorDelete)(Vector *);
 
 
 /**
@@ -30,7 +30,7 @@ typedef void(*VectorDelete)(Vector_t *);
 /**
 ** @brief Metadata with information about dynamic array. 
 */
-struct Vector_t
+struct Vector
 {
     size_t length;          /** number of elemts in array */
     size_t type_size;       /** size of every element in array in bytes */
@@ -50,7 +50,7 @@ struct Vector_t
 ** @brief Casting macro for accessing metadata header with 
 ** information about dynamic array
 */
-#define VECTOR(T) ((Vector_t *) T-1)
+#define VECTOR(T) ((Vector *) T-1)
 
 
 /**
@@ -76,7 +76,7 @@ vector_new(
 ** @brief Constructor for Vector structure with initialization.
 */
 Vector(void) *
-vector_new_init(
+vector_new_from_array(
     size_t type_size
     , size_t length
     , void * array
@@ -88,11 +88,11 @@ vector_new_init(
 ** beded to write explicitly data type of output vector. This type is given by
 ** input array data type with init values
 */
-#define vector_init(length, array, delete)      \
-    vector_new_init(                            \
-        sizeof(*array)                          \
-        , length                                \
-        , array                                 \
+#define vector_from_array(length, array, delete)        \
+    vector_new_init(                                    \
+        sizeof(*array)                                  \
+        , length                                        \
+        , array                                         \
         , VECTOR_DELETE(delete))
 
 
@@ -101,7 +101,7 @@ vector_new_init(
 ** is NULL, then the output from this function will be also NULL.
 */
 Vector(void) *
-vector_clone(Vector_t * self);
+vector_clone(Vector * self);
 
 
 /**
@@ -113,7 +113,7 @@ vector_clone(Vector_t * self);
 */
 Vector(void) *
 vector_resize(
-    Vector_t * self
+    Vector * self
     , size_t length);
 
 
@@ -122,8 +122,8 @@ vector_resize(
 */
 Vector(void) *
 vector_concat(
-    Vector_t * a
-    , Vector_t * b);
+    Vector * a
+    , Vector * b);
 
 
 /**
@@ -133,7 +133,7 @@ vector_concat(
 ** memory must be released separatly
 */
 void
-vector_delete(Vector_t * self);
+vector_delete(Vector * self);
 
 
 #endif
