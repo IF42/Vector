@@ -68,6 +68,41 @@ main__(void)
     return EXIT_SUCCESS;
 }
 
+Vector(void) *
+vector_map(
+    Vector * self
+    , bool (*f)(void *))
+{
+    Vector(void) * vec = 
+        vector(
+            VECTOR(self)->type_size
+            , VECTOR(self)->length
+            , VECTOR(self)->delete);
+    size_t matched     = 0;
+
+    for(size_t i = 0; i < VECTOR(self)->length; i++)
+    {
+        if(f(&self[VECTOR(self)->type_size * i]) == true)
+        {
+            memcpy(
+                &vec[VECTOR(vec)->type_size * matched]
+                , &self[VECTOR(self)->type_size*i]
+                , VECTOR(self)->type_size);
+            matched++;
+        }
+    }   
+
+    if(matched == 0)
+    {
+        vector_delete(vec);
+        return NULL;
+    }
+    else
+        return vector_resize(VECTOR(vec), matched);
+}
+
+
+
 int 
 main(void)
 {
