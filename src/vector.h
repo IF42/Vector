@@ -16,25 +16,12 @@ typedef struct Vector Vector;
 
 
 /**
-** @brief Data type for Vector destructor
-*/
-typedef void(*VectorDelete)(Vector *);
-
-
-/**
-** @brief Casting macro for vector destructor 
-*/
-#define VECTOR_DELETE(T)((VectorDelete) T)
-
-
-/**
 ** @brief Metadata with information about dynamic array. 
 */
 struct Vector
 {
     size_t length;          /** number of elemts in array */
     size_t type_size;       /** size of every element in array in bytes */
-    VectorDelete delete;    /** destructor for vector */
 };
 
 
@@ -60,16 +47,15 @@ struct Vector
 Vector(void) *
 vector_new(
     size_t type_size
-    , size_t length
-    , VectorDelete delete);
+    , size_t length);
 
 
 /**
 ** @brief Simplified Vector constructor, where is not needed to write 
 ** explicitly type size, with operator sizeof.
 */
-#define vector(T, length, delete)                           \
-    vector_new(sizeof(T), length, VECTOR_DELETE(delete));
+#define vector(T, length)          \
+    vector_new(sizeof(T), length);
 
 
 /**
@@ -79,8 +65,7 @@ Vector(void) *
 vector_new_from_array(
     size_t type_size
     , size_t length
-    , void * array
-    , VectorDelete delete);
+    , void * array);
 
 
 /**
@@ -88,12 +73,11 @@ vector_new_from_array(
 ** beded to write explicitly data type of output vector. This type is given by
 ** input array data type with init values
 */
-#define vector_from_array(length, array, delete)        \
-    vector_new_init(                                    \
-        sizeof(*array)                                  \
-        , length                                        \
-        , array                                         \
-        , VECTOR_DELETE(delete))
+#define vector_from_array(array)                \
+    vector_new_from_array(                      \
+        sizeof(*array)                          \
+        , sizeof(array)/sizeof(*array)          \
+        , array)
 
 
 /**

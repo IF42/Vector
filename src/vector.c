@@ -18,14 +18,13 @@
 Vector(void) *
 vector_new(
     size_t type_size
-    , size_t length
-    , VectorDelete delete)
+    , size_t length)
 {
     Vector * self = 
         malloc(sizeof(Vector) + (type_size * length));
 
     if(self != NULL)
-       *self = (Vector){.type_size = type_size, .length=length, .delete=delete};
+       *self = (Vector){.type_size = type_size, .length=length};
 
     return self + 1;
 }
@@ -35,8 +34,7 @@ Vector(void) *
 vector_new_from_array(
     size_t type_size
     , size_t length
-    , void * array
-    , VectorDelete delete)
+    , void * array)
 {
     size_t byte_length = type_size * length; 
 
@@ -45,7 +43,7 @@ vector_new_from_array(
 
     if(self != NULL)
     {
-        *self = (Vector){.type_size=type_size, .length=length, .delete=delete};
+        *self = (Vector){.type_size=type_size, .length=length};
         memcpy(self + 1, array, byte_length);
     }
 
@@ -103,8 +101,7 @@ vector_concat(
     Vector * self = 
         vector_new(
             a->type_size
-            , a->length + b->length
-            , a->delete);
+            , a->length + b->length);
 
     memcpy(self+1, a+1, a->type_size*a->length);
     memcpy((char*)(self+1) + (a->type_size*a->length), b+1, b->type_size*b->length);
@@ -115,8 +112,7 @@ vector_concat(
 void
 vector_delete(Vector * self)
 {
-    if(self != NULL)
-        self->delete(self);
+    free(self);
 }
 
 

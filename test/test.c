@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../src/vector.h"
 
 
 int 
-main_(void)
+main(void)
 {
     Vector(float) * vec = 
-        vector_init(
-                10
-                , ((float[10]) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+        vector_from_array(
+                ((float[10]) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
                 , free);    
 
-    printf("Vector(float) {type_size = %lld, length = %lld, ["
+    printf("Vector(float) {type_size = %ld, length = %ld, ["
             , VECTOR(vec)->type_size
             , VECTOR(vec)->length);
 
@@ -24,7 +24,7 @@ main_(void)
 
     vec = vector_resize(VECTOR(vec), 5);
 
-    printf("%lld\n", VECTOR(vec)->length);
+    printf("%ld\n", VECTOR(vec)->length);
     vector_delete(VECTOR(vec));
 
     printf("Program exit..");
@@ -33,7 +33,7 @@ main_(void)
 }
 
 
-
+#if 0
 int
 main__(void)
 {
@@ -104,7 +104,7 @@ vector_map(
 
 
 int 
-main(void)
+main_(void)
 {
     float inputs[] = {1, 2, 3, 2.5};
     float weights[][4] = {{0.2, 0.8, -0.5, 1.0}
@@ -130,4 +130,4 @@ main(void)
 
     return EXIT_SUCCESS;
 }
-
+#endif
