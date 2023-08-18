@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -pedantic -std=c2x -O3 -fPIC
+CFLAGS=-Wall -Wextra -pedantic -std=c2x -O3
 LIBS=
 
 

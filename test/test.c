@@ -9,9 +9,7 @@ int
 main(void)
 {
     Vector(float) * vec = 
-        vector_from_array(
-                ((float[10]) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
-                , free);    
+        vector_from_array(((float[10]) {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})); 
 
     printf("Vector(float) {type_size = %ld, length = %ld, ["
             , VECTOR(vec)->type_size
