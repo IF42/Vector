@@ -17,14 +17,17 @@
 
 Vector(void) *
 vector_new(
-    size_t type_size
+    size_t dtype
     , size_t length)
 {
+    if(length == 0 || dtype == 0)
+        return NULL;
+
     Vector * self = 
-        malloc(sizeof(Vector) + (type_size * length));
+        malloc(sizeof(Vector) + (dtype * length));
 
     if(self != NULL)
-       *self = (Vector){.type_size = type_size, .length=length};
+       *self = (Vector){.dtype=dtype, .length=length};
 
     return self + 1;
 }
@@ -32,19 +35,22 @@ vector_new(
 
 Vector(void) *
 vector_new_from_array(
-    size_t type_size
+    size_t dtype
     , size_t length
     , void * array)
 {
-    size_t byte_length = type_size * length; 
+    if(length == 0 || dtype == 0)
+        return NULL;
+
+    size_t mem_size = dtype * length; 
 
     Vector * self = 
-        malloc(sizeof(Vector) + byte_length);
+        malloc(sizeof(Vector) + mem_size);
 
     if(self != NULL)
     {
-        *self = (Vector){.type_size=type_size, .length=length};
-        memcpy(self + 1, array, byte_length);
+        *self = (Vector){.dtype=dtype, .length=length};
+        memcpy(self + 1, array, mem_size);
     }
 
     return self + 1;
@@ -57,13 +63,13 @@ vector_clone(Vector * self)
     if(self == NULL) 
         return NULL;
 
-    size_t memsize = 
-        sizeof(Vector) + (self->type_size * self->length);
+    size_t mem_size = 
+        sizeof(Vector) + (self->dtype * self->length);
 
-    Vector * clone = malloc(memsize);
+    Vector * clone = malloc(mem_size);
 
     if(clone != NULL)
-        memcpy(clone, self, memsize);
+        memcpy(clone, self, mem_size);
 
     return self + 1;
 }
@@ -78,7 +84,7 @@ vector_resize(
         return NULL;
 
     Vector * resize = 
-        realloc(self, sizeof(Vector) + (self->type_size * length));
+        realloc(self, sizeof(Vector) + (self->dtype * length));
 
     if(resize != NULL)
     {
@@ -95,19 +101,24 @@ vector_concat(
     Vector * a
     , Vector * b)
 {
-    if(a->type_size != b->type_size)
+    if(a->dtype != b->dtype)
         return NULL;
+
+    size_t mem_size_a = a->dtype * a->length;
+    size_t mem_size_b = b->dtype * b->length;
 
     Vector * self = 
         vector_new(
-            a->type_size
+            a->dtype
             , a->length + b->length);
 
-    memcpy(self+1, a+1, a->type_size*a->length);
-    memcpy((char*)(self+1) + (a->type_size*a->length), b+1, b->type_size*b->length);
+
+    memcpy(self+1, a+1, mem_size_a);
+    memcpy((self+1) + mem_size_a, b+1, mem_size_b);
 
     return self+1;
 }
+
 
 void
 vector_delete(Vector * self)

@@ -20,8 +20,8 @@ typedef struct Vector Vector;
 */
 struct Vector
 {
-    size_t length;          /** number of elemts in array */
-    size_t type_size;       /** size of every element in array in bytes */
+    size_t length;      /** number of elemts in array */
+    size_t dtype;       /** size of every element in array in bytes */
 };
 
 
@@ -46,7 +46,7 @@ struct Vector
 */
 Vector(void) *
 vector_new(
-    size_t type_size
+    size_t dtype
     , size_t length);
 
 
@@ -55,7 +55,7 @@ vector_new(
 ** explicitly type size, with operator sizeof.
 */
 #define vector(T, length)          \
-    vector_new(sizeof(T), length);
+    vector_new(sizeof(T), length)
 
 
 /**
@@ -63,7 +63,7 @@ vector_new(
 */
 Vector(void) *
 vector_new_from_array(
-    size_t type_size
+    size_t dtype
     , size_t length
     , void * array);
 
